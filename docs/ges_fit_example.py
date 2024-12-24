@@ -1,5 +1,5 @@
-import ges
-import ges.scores
+import ges_local
+import ges_local.scores
 import sempler
 import numpy as np
 
@@ -13,10 +13,10 @@ W = A * np.random.uniform(1, 2, A.shape) # sample weights
 data = sempler.LGANM(W,(1,2), (1,2)).sample(n=5000)
 
 # Define the score class
-score_class = ges.scores.GaussObsL0Pen(data)
+score_class = ges_local.scores.GaussObsL0Pen(data)
 
 # Run GES with the gaussian BIC score
-estimate, score = ges.fit(score_class)
+estimate, score = ges_local.fit(score_class)
 
 print(estimate, score)
 

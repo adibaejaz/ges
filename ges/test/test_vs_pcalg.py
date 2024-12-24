@@ -38,9 +38,9 @@ import sempler
 import sempler.generators
 import time
 
-import ges
-import ges.scores.gauss_obs_l0_pen
-import ges.utils
+import ges_local
+import ges_local.scores.gauss_obs_l0_pen
+import ges_local.utils
 
 # For CDT
 from cdt.causality.graph import GES
@@ -106,7 +106,7 @@ class OverallGESTests(unittest.TestCase):
             start = time.time()
             # Estimate using this implementation
             # Test debugging output for the first 2 SCMs
-            estimate, _ = ges.fit_bic(obs_sample, iterate=True, debug=4 if i < 2 else 2)
+            estimate, _ = ges_local.fit_bic(obs_sample, iterate=True, debug=4 if i < 2 else 2)
             end = time.time()
             print("    GES-own done (%0.2f seconds)" % (end - start))
             self.assertTrue((estimate == estimate_cdt).all())
@@ -131,8 +131,8 @@ class OverallGESTests(unittest.TestCase):
             # Estimate the equivalence class using the pcalg
             # implementation of GES (package cdt)
             data = pd.DataFrame(obs_sample)
-            score_class = ges.scores.gauss_obs_l0_pen.GaussObsL0Pen(obs_sample)
-            completion_algorithm = None if i % 2 == 0 else ges.utils.pdag_to_cpdag
+            score_class = ges_local.scores.gauss_obs_l0_pen.GaussObsL0Pen(obs_sample)
+            completion_algorithm = None if i % 2 == 0 else ges_local.utils.pdag_to_cpdag
             output = GES(verbose=True).predict(data)
             estimate_cdt = nx.to_numpy_array(output)
             end = time.time()
@@ -140,7 +140,7 @@ class OverallGESTests(unittest.TestCase):
             start = time.time()
             # Estimate using this implementation
             # Test debugging output for the first 2 SCMs
-            estimate, _ = ges.fit(
+            estimate, _ = ges_local.fit(
                 score_class, completion_algorithm=completion_algorithm, iterate=True, debug=4 if i < 2 else 2)
             end = time.time()
             print("    GES-own done (%0.2f seconds)" % (end - start))
@@ -165,7 +165,7 @@ class OverallGESTests(unittest.TestCase):
             # Estimate the equivalence class using the pcalg
             # implementation of GES (package cdt)
             data = pd.DataFrame(obs_sample)
-            score_class = ges.scores.gauss_obs_l0_pen.GaussObsL0Pen(obs_sample, method='raw')
+            score_class = ges_local.scores.gauss_obs_l0_pen.GaussObsL0Pen(obs_sample, method='raw')
             output = GES(verbose=True).predict(data)
             estimate_cdt = nx.to_numpy_array(output)
             end = time.time()
@@ -173,7 +173,7 @@ class OverallGESTests(unittest.TestCase):
             start = time.time()
             # Estimate using this implementation
             # Test debugging output for the first 2 SCMs
-            estimate, _ = ges.fit(score_class, iterate=True, debug=4 if i < 2 else 2)
+            estimate, _ = ges_local.fit(score_class, iterate=True, debug=4 if i < 2 else 2)
             end = time.time()
             print("    GES-own done (%0.2f seconds)" % (end - start))
             self.assertTrue((estimate == estimate_cdt).all())

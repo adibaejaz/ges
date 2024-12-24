@@ -35,7 +35,7 @@ import unittest
 import numpy as np
 import sempler
 
-from ges.scores.gauss_obs_l0_pen import GaussObsL0Pen
+from ges_local.scores.gauss_obs_l0_pen import GaussObsL0Pen
 
 # ---------------------------------------------------------------------
 # Tests for the l0-penalized scores

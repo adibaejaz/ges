@@ -60,8 +60,8 @@ Additional modules / packages:
 """
 
 import numpy as np
-import ges.utils as utils
-from ges.scores.gauss_obs_l0_pen import GaussObsL0Pen
+import ges_local.utils as utils
+from ges_local.scores.gauss_obs_l0_pen import GaussObsL0Pen
 
 
 def fit_bic(data, A0=None, phases=['forward', 'backward', 'turning'], iterate=False, debug=0):

@@ -36,9 +36,9 @@ import unittest
 import numpy as np
 import sempler
 import sempler.generators
-import ges.utils as utils
+import ges_local.utils as utils
 
-import ges.utils
+import ges_local.utils
 
 # ---------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
                       [0, 0, 1, 1],
                       [1, 0, 0, 0],
                       [0, 0, 0, 0]])
-        A = ges.utils.pdag_to_dag(P, debug=False)
+        A = ges_local.utils.pdag_to_dag(P, debug=False)
         # print(A)
         true_A = P.copy()
         true_A[0, 2] = 0
@@ -65,7 +65,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
                       [1, 0, 0, 1],
                       [1, 0, 0, 0],
                       [0, 0, 0, 0]])
-        A = ges.utils.pdag_to_dag(P, debug=False)
+        A = ges_local.utils.pdag_to_dag(P, debug=False)
         # print(A)
         true_A = P.copy()
         true_A[2, 0] = 0
@@ -77,7 +77,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
                       [0, 0, 0, 1],
                       [1, 1, 0, 0],
                       [0, 0, 0, 0]])
-        A = ges.utils.pdag_to_dag(P, debug=False)
+        A = ges_local.utils.pdag_to_dag(P, debug=False)
         # print(A)
         true_A1, true_A2 = P.copy(), P.copy()
         true_A1[0, 2], true_A2[2, 0] = 0, 0
@@ -92,7 +92,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
                       [1, 0, 0, 0],
                       [0, 0, 1, 0]])
         try:
-            ges.utils.pdag_to_dag(P, debug=False)
+            ges_local.utils.pdag_to_dag(P, debug=False)
             self.fail("Exception should have been thrown")
         except ValueError as e:
             print("OK:", e)
@@ -103,7 +103,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
                       [0, 0, 1, 0],
                       [0, 0, 0, 0],
                       [0, 0, 1, 0]])
-        extension = ges.utils.pdag_to_dag(A, debug=False)
+        extension = ges_local.utils.pdag_to_dag(A, debug=False)
         self.assertTrue(utils.is_consistent_extension(extension, A))
         self.assertTrue((extension == A).all())
 
@@ -116,7 +116,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
             A = sempler.generators.dag_avg_deg(p, 3, 1, 1)
             cpdag = utils.dag_to_cpdag(A)
             self.assertTrue(utils.is_consistent_extension(A, cpdag))
-            extension = ges.utils.pdag_to_dag(cpdag, debug=False)
+            extension = ges_local.utils.pdag_to_dag(cpdag, debug=False)
             is_consistent_extension = utils.is_consistent_extension(extension, cpdag)
             if not is_consistent_extension:
                 print("DAG\n", A)
@@ -124,7 +124,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
                 print("Extension\n", extension)
                 utils.is_consistent_extension(extension, cpdag, debug=True)
                 # Rerun with outputs
-                assert (extension == ges.utils.pdag_to_dag(cpdag, debug=True)).all()
+                assert (extension == ges_local.utils.pdag_to_dag(cpdag, debug=True)).all()
                 self.assertTrue(is_consistent_extension)
         print("\nChecked PDAG to DAG conversion for %d PDAGs" % (i + 1))
 
@@ -135,7 +135,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
         pdag = A.copy()
         pdag[4, 2] = 1
         try:
-            ges.utils.order_edges(pdag)
+            ges_local.utils.order_edges(pdag)
             self.fail()
         except ValueError as e:
             print("OK:", e)
@@ -143,7 +143,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
         cyclic = pdag.copy()
         cyclic[2, 4] = 0
         try:
-            ges.utils.order_edges(cyclic)
+            ges_local.utils.order_edges(cyclic)
             self.fail()
         except ValueError as e:
             print("OK:", e)
@@ -151,7 +151,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
     def test_order_edges_1(self):
         A = np.array([[0, 0, 1, 1, 1], [0, 0, 1, 1, 1], [
                      0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0]])
-        ordered = ges.utils.order_edges(A)
+        ordered = ges_local.utils.order_edges(A)
         # print(ordered)
         # Ground truth derived by hand for the order [1,0,2,3,4]
         truth = np.array([[0, 0, 9, 6, 2],
@@ -167,7 +167,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
         p = 20
         for i in range(G):
             A = sempler.generators.dag_avg_deg(p, 3, 1, 1)
-            ordered = ges.utils.order_edges(A)
+            ordered = ges_local.utils.order_edges(A)
             no_edges = (A != 0).sum()
             self.assertEqual(sorted(ordered[ordered != 0]), list(range(1, no_edges + 1)))
         print("\nChecked valid ordering for %d DAGs" % (i + 1))
@@ -179,7 +179,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
         pdag = A.copy()
         pdag[4, 2] = 1
         try:
-            ges.utils.order_edges(pdag)
+            ges_local.utils.order_edges(pdag)
             self.fail()
         except ValueError as e:
             print("OK:", e)
@@ -187,21 +187,21 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
         cyclic = pdag.copy()
         cyclic[2, 4] = 0
         try:
-            ges.utils.order_edges(cyclic)
+            ges_local.utils.order_edges(cyclic)
             self.fail()
         except ValueError as e:
             print("OK:", e)
         # Check that if ordering is invalid an exception is thrown
         try:
-            ges.utils.label_edges(A)
+            ges_local.utils.label_edges(A)
             self.fail()
         except ValueError as e:
             print("OK:", e)
         # Same same, but different :)
-        ordered = ges.utils.order_edges(A)
+        ordered = ges_local.utils.order_edges(A)
         ordered[0, 4] = 1
         try:
-            ges.utils.label_edges(ordered)
+            ges_local.utils.label_edges(ordered)
             self.fail()
         except ValueError as e:
             print("OK:", e)
@@ -213,13 +213,13 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
                       [0, 0, 0, 1, 1],
                       [0, 0, 0, 0, 1],
                       [0, 0, 0, 0, 0]])
-        ordered = ges.utils.order_edges(A)
+        ordered = ges_local.utils.order_edges(A)
         truth = np.array([[0, 0, 1, 0, 0],
                           [0, 0, 1, 0, 0],
                           [0, 0, 0, 1, 1],
                           [0, 0, 0, 0, -1],
                           [0, 0, 0, 0, 0]])
-        labelled = ges.utils.label_edges(ordered)
+        labelled = ges_local.utils.label_edges(ordered)
         self.assertTrue((labelled == truth).all())
 
     def test_label_edges_2(self):
@@ -235,8 +235,8 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
             truth = A.copy()
             truth[np.logical_and(truth, undirected)] = -1
             # Run and assert
-            ordered = ges.utils.order_edges(A)
-            labelled = ges.utils.label_edges(ordered)
+            ordered = ges_local.utils.order_edges(A)
+            labelled = ges_local.utils.label_edges(ordered)
             self.assertTrue((labelled == truth).all())
         print("\nChecked edge labelling for %d DAGs" % (i + 1))
 
@@ -249,7 +249,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
             A = sempler.generators.dag_avg_deg(p, 4, 1, 1)
             truth = utils.dag_to_cpdag(A)
             # Run and assert
-            cpdag = ges.utils.dag_to_cpdag(A)
+            cpdag = ges_local.utils.dag_to_cpdag(A)
             self.assertTrue((truth == cpdag).all())
         print("\nChecked DAG to CPDAG conversion for %d DAGs" % (i + 1))
 
@@ -262,7 +262,7 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
             A = sempler.generators.dag_avg_deg(p, 3, 1, 1)
             cpdag = utils.dag_to_cpdag(A)
             # Run and assert
-            output = ges.utils.pdag_to_cpdag(cpdag)
+            output = ges_local.utils.pdag_to_cpdag(cpdag)
             self.assertTrue((output == cpdag).all())
         print("\nChecked CPDAG to CPDAG conversion for %d CPDAGs" % (i + 1))
 
@@ -292,6 +292,6 @@ class PDAG_to_CPDAG_Tests(unittest.TestCase):
             # Run and assert
             self.assertTrue(utils.is_consistent_extension(A, pdag))
             truth = utils.dag_to_cpdag(A)
-            output = ges.utils.pdag_to_cpdag(pdag)
+            output = ges_local.utils.pdag_to_cpdag(pdag)
             self.assertTrue((output == truth).all())
         print("\nChecked PDAG to CPDAG conversion for %d PDAGs" % (g + 1))
